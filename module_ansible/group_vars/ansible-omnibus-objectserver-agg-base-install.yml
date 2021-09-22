@@ -1,0 +1,5 @@
+---
+PATH: "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/netcool:/opt/IBM:/opt/IBM/tivoli/netcool:/opt/IBM/tivoli/netcool/omnibus"
+CONFIGS_HOME: "/opt/accuoss/omnibus/configs/objectserver"
+NCHOME: "/opt/IBM/tivoli/netcool"
+OMNIHOME: "/opt/IBM/tivoli/netcool/omnibus"
