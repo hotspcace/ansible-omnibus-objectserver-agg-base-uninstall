@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<agent-input>
+  <variables>
+    <variable name='sharedLocation' value='/home/netcool/IBM/IBMIMShared'/>
+  </variables>
+  <server>
+    <repository location='/home/netcool/repository/core/OMNIbusRepository'/>
+  </server>
+  <profile id='IBM Netcool Core Components' installLocation='/opt/IBM/tivoli/netcool'>
+    <data key='cic.selector.arch' value='x86_64'/>
+    <data key='user.migratedata,com.ibm.tivoli.omnibus.core' value='****'/>
+  </profile>
+  <uninstall>
+    <offering profile='IBM Netcool Core Components' id='com.ibm.tivoli.omnibus.core' version='5.50.94.20201007_1514'/>
+  </uninstall>
+  <preference name='com.ibm.cic.common.core.preferences.eclipseCache' value='${sharedLocation}'/>
+</agent-input>
