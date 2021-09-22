@@ -9,9 +9,11 @@
   become: yes
   become_method: enable
   register: pad_status
+  ignore_errors: True
 
 - name: Debug PAD Status
   debug: var=pad_status.stdout
+  ignore_errors: True
 ##########################################################
 
 
@@ -26,9 +28,11 @@
       OMNIHOME: /opt/IBM/tivoli/netcool/omnibus
       NCHOME: /opt/IBM/tivoli/netcool
   register: stop_pad
+  ignore_errors: True
 
 - name: Debug Stopping PAD
   debug: var=stop_pad.stdout
+  ignore_errors: True
 ##########################################################
 
 
@@ -38,6 +42,7 @@
 - name: Uninstall IBM Omnibus ObjectServer
   shell: "/home/netcool/IBM/eclipse/tools/imcl -input /opt/segra_files/omnibus_uninstall_response_file.xml"
   become: true
+  ignore_errors: True
 ##########################################################
 
 ##########################################################
@@ -46,63 +51,64 @@
 - name: Uninstall IBM Install Manager
   shell: "/root/var/ibm/InstallationManager/uninstall/uninstall --launcher.ini /root/var/ibm/InstallationManager/uninstall/silent-uninstall.ini"
   become: true
+  ignore_errors: True
 ##########################################################
 
-- name: Uninstall yum packages using a list
-  become: True
-  yum:
-    state: removed
-    name:
-      - tar
-      - hostname
-      - unzip
-      - audit-libs
-      - fontconfig
-      - freetype
-      - compat-libstdc++-33.i686
-      - glibc.i686
-      - gtk2
-      - libICE
-      - libSM
-      - libX11
-      - libXau
-      - libXcursor
-      - libXext
-      - libXft
-      - libXmu
-      - libXp
-      - libXpm
-      - libXrender
-      - libXt
-      - libXtst
-      - libstdc++.i686
-      - libgcc.i686
-      - libjpeg-turbo
-      - libpng12
-      - motif
-      - dejavu-fonts-common
-      - dejavu-sans-fonts
-      - expat
-      - glibc
-      - libgcc      
-      - libidn
-      - libstdc++
-      - libuuid
-      - libxcb
-      - nss-softokn-freebl
-      - pam
-      - zlib
-      - nss-softokn-freebl.i686
-      - compat-libstdc++-33
-      - git
-      - logrotate
-      - strace
-      - vim
-      - bc
-      - pam.i686
-      - xorg-x11-xauth.x86_64
-      - xorg-x11-apps-7.7-7.el7.x86_64
-      - xterm
+#- name: Uninstall yum packages using a list
+#  become: True
+#  yum:
+#    state: removed
+#    name:
+#      - tar
+#      - hostname
+#      - unzip
+#      - audit-libs
+#      - fontconfig
+#      - freetype
+#      - compat-libstdc++-33.i686
+#      - glibc.i686
+#      - gtk2
+#      - libICE
+#      - libSM
+#      - libX11
+#      - libXau
+##      - libXcursor
+#      - libXext
+#      - libXft
+#      - libXmu
+#      - libXp
+#      - libXpm
+#      - libXrender
+#      - libXt
+#      - libXtst
+#      - libstdc++.i686
+#      - libgcc.i686
+#      - libjpeg-turbo
+#      - libpng12
+#      - motif
+#      - dejavu-fonts-common
+#      - dejavu-sans-fonts
+#      - expat
+#      - glibc
+#      - libgcc      
+#      - libidn
+#      - libstdc++
+#      - libuuid
+#      - libxcb
+#      - nss-softokn-freebl
+#      - pam
+#      - zlib
+#      - nss-softokn-freebl.i686
+#      - compat-libstdc++-33
+#      - git
+#      - logrotate
+#      - strace
+#      - vim
+#      - bc
+#      - pam.i686
+#      - xorg-x11-xauth.x86_64
+#      - xorg-x11-apps-7.7-7.el7.x86_64
+#      - xterm
 ##########################################################
 
 
@@ -114,19 +120,11 @@
   file:
     path: /opt/IBM
     state: absent 
-    owner: netcool
-    group: ncoadmin
-    mode: 0775
-    recurse: yes
 
 - name: Remove /opt/accuoss/repository Directory 
   file:
     path: /opt/accuoss/repository
     state: absent 
-    owner: netcool
-    group: ncoadmin
-    mode: 0775
-    recurse: yes
 
 #- name: Remove /opt/accuoss/omnibus/scripts Directory 
 #  file:
@@ -140,10 +138,6 @@
   file:
     path: /opt/accuoss/omnibus
     state: absent
-    owner: netcool  
-    group: ncoadmin
-    mode: 0775
-    recurse: yes
 
 #- name: Remove /opt/accuoss/omnibus/configs/objectserver Directory 
 #  file:
@@ -173,10 +167,6 @@
   file:
     path: /home/netcool/repository/core 
     state: absent
-    owner: netcool
-    group: ncoadmin
-    mode: 0775
-    recurse: yes
 
 ########################################################
 # Set permissions on files for netcool
@@ -196,6 +186,22 @@
 ########################################################
 
 ########################################################
+# Kill any processes being used by netcool user
+########################################################
+- name: Kill any processes running by netcool user 
+  shell: "pkill -9 -f netcool"
+  become: yes
+  become_user: root 
+  ignore_errors: True
+########################################################
+- name: Change root user primary group 
+  shell: "usermod -g root root"
+  become: yes
+  become_user: root
+  ignore_errors: True
+
+
+########################################################
 # Remove omnibus admin accounts
 ########################################################
 - user:
@@ -209,6 +215,7 @@
     remove: yes
     password: "$6$ulGOJh6254sgt8QS$C/XftgH.MkMor2X.GbZLIlsfSHKRkHjqAANtiV0zlARH2R7m2.Kis.DICdm.45A7ntp0ImCndPutANY68.PSA/"
   become: true
+  ignore_errors: True
 
 - group:
     name: ncoadmin

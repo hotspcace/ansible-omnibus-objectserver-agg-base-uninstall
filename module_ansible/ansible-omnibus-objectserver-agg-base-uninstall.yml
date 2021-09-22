@@ -10,5 +10,5 @@
 #    - role: base
 #      tags: base
 
-    - role: ansible-omnibus-objectserver-agg-base-install 
-      tags: ansible-omnibus-objectserver-agg-base-install 
+    - role: ansible-omnibus-objectserver-agg-base-uninstall 
+      tags: ansible-omnibus-objectserver-agg-base-uninstall 
