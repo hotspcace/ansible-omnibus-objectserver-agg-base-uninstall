@@ -1,38 +1,31 @@
 ---
 
 ##########################################################
-# Check to see if PAD process is running
+# Kill any processes running by netcool user  
 ##########################################################
-- name: Check status of PAD process
-  shell: "ps -ef|grep nco_pad|grep -v grep|cut -d' ' -f24|cut -d'/' -f10"
-  become_user: netcool
+- name: Kill any processes running by netcool user
+  shell: "pkill -9 -f netcool"
   become: yes
-  become_method: enable
-  register: pad_status
+  become_user: root
   ignore_errors: True
-
-- name: Debug PAD Status
-  debug: var=pad_status.stdout
-  ignore_errors: True
-##########################################################
 
 
 ##########################################################
 # Stop PAD and all processes using startup script
 ##########################################################
-- name: Stop PAD
-  shell: "source /home/netcool/.bashrc && /etc/init.d/nco stop"
-  become: yes
-  become_user: netcool
-  environment:
-      OMNIHOME: /opt/IBM/tivoli/netcool/omnibus
-      NCHOME: /opt/IBM/tivoli/netcool
-  register: stop_pad
-  ignore_errors: True
-
-- name: Debug Stopping PAD
-  debug: var=stop_pad.stdout
-  ignore_errors: True
+#- name: Stop PAD
+#  shell: "source /home/netcool/.bashrc && /etc/init.d/nco stop"
+#  become: yes
+#  become_user: netcool
+#  environment:
+#      OMNIHOME: /opt/IBM/tivoli/netcool/omnibus
+#      NCHOME: /opt/IBM/tivoli/netcool
+#  register: stop_pad
+#  ignore_errors: True
+#
+#- name: Debug Stopping PAD
+#  debug: var=stop_pad.stdout
+#  ignore_errors: True
 ##########################################################
 
 
